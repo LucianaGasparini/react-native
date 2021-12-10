@@ -46,8 +46,7 @@ const getIcon = (screenName) => {
   }
 };
 
-function CustomDrawerContent(props) {
-  props.usuario;
+function CustomDrawerContent(props) {  
   return (
     <DrawerContentScrollView {...props} safeArea>
       <VStack space="6" my="2" mx="1">
@@ -102,13 +101,15 @@ function CustomDrawerContent(props) {
   );
 }
 function MyDrawer({ usuario }) {
+  console.log(usuario)
   return (
     <Box safeArea flex={1}>
       <Drawer.Navigator
         drawerContent={(props) => (
           <CustomDrawerContent usuario={usuario} {...props} />
         )}
-        screenOptions={{headerShown: usuario? true:false}}
+       screenOptions={{headerShown: usuario? true:false}}
+       initialRouteName={usuario ? "Alunos": "Login"}
       >
         <Drawer.Screen name="Login" component={Login} />
         <Drawer.Screen name="Alunos" component={Alunos} />

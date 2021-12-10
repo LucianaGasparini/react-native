@@ -1,8 +1,29 @@
-import React, {createContext, useState} from 'react';
-//import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { createContext, useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-//const jsonValue = await AsyncStorage.getItem('@storage_Key')
 export const UsuarioContext = createContext();
+export const UsuarioProvider = ({ children }) => {
+  const [usuario, setUsuario] = useState();
+
+  useEffect(() => {
+    AsyncStorage.getItem("@usuario").then(login => {
+      const usuarioObj = login ? JSON.parse(login): undefined;
+      setUsuario(usuarioObj);
+    });
+  }, []);
+
+  return (
+    <UsuarioContext.Provider
+      value={{
+        usuario,
+        setUsuario,
+      }}
+    >
+      {children}
+    </UsuarioContext.Provider>
+  );
+};
+/*export const UsuarioContext = createContext();
 export const UsuarioProvider = ({children}) => {
   const [usuario, setUsuario] = useState();
 
@@ -16,5 +37,4 @@ export const UsuarioProvider = ({children}) => {
       {children}
     </UsuarioContext.Provider>
   );
-};
-
+};*/

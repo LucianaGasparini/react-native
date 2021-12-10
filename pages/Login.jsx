@@ -8,11 +8,11 @@ import "react-native-gesture-handler";
 import { Container } from "../components/Container";
 import Title from "../components/Title";
 import { UsuarioContext } from "../context";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({navigation}) => {
   const [email, setEmail] = useState();
-  const [senha, setSenha] = useState();
+  const [senha, setSenha] = useState();  
   const [mostrarMensagemErro, setMostrarMensagemErro]= useState(false);
   const{usuario,setUsuario} = useContext(UsuarioContext);
 
@@ -20,11 +20,18 @@ const Login = ({navigation}) => {
     axios.post ('https://secret-headland-69654.herokuapp.com/logar', {
       email,
       senha
-    }). then(result =>{
+    }). then(async (result) =>{
+      const usuarioEmString = JSON.stringify(result.data);
+      AsyncStorage.removeItem("@usuario").then(()=> {
+      AsyncStorage.setItem("@usuario", usuarioEmString)
+    });
+      console.log(usuarioEmString);
       setUsuario(result.data);
+      navigation.navigate("Alunos");
       limparCamposLogin();
     })
     .catch((erro)=>{
+      console.log(erro);
       setMostrarMensagemErro(true);
       
     });
@@ -88,7 +95,7 @@ const Login = ({navigation}) => {
         //variant="outline"
         onPress={() => efetuarLogin()}
       >
-        Logar
+        Entrar
       </Button>
       <Text
       mt = "5"
@@ -107,7 +114,7 @@ const Login = ({navigation}) => {
         //variant="outline"
         onPress={()=>navigation.navigate("Novo Usuário")}
       >
-        Clique aqui
+        Clicando aqui
       </Button>
      
     </Container>
