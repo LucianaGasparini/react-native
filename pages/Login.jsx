@@ -3,18 +3,23 @@ import {
   Alert, Button, CloseIcon,
   Collapse, HStack, IconButton, Input, Text, VStack
 } from "native-base";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import "react-native-gesture-handler";
 import { Container } from "../components/Container";
 import Title from "../components/Title";
 import { UsuarioContext } from "../context";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 const Login = ({navigation}) => {
   const [email, setEmail] = useState();
   const [senha, setSenha] = useState();  
   const [mostrarMensagemErro, setMostrarMensagemErro]= useState(false);
   const{usuario,setUsuario} = useContext(UsuarioContext);
+
+  useEffect(()=> {
+    if (usuario) navigation.navigate('Alunos');
+  }, [usuario]);
 
     const efetuarLogin = () =>{
     axios.post ('https://secret-headland-69654.herokuapp.com/logar', {
@@ -105,16 +110,16 @@ const Login = ({navigation}) => {
               color: "warmGray.200",
             }}
           >
-            Seja um novo usuário{" "}
+            {" "}
           </Text>
           
           <Button
           mt = "5"
         size="lg"
-        //variant="outline"
+        variant="outline"
         onPress={()=>navigation.navigate("Novo Usuário")}
       >
-        Clicando aqui
+        Faça seu cadastro de usuário
       </Button>
      
     </Container>

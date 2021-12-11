@@ -6,12 +6,13 @@ import {
   Pressable,
   Spacer, Text, useDisclose, VStack
 } from "native-base";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { SwipeListView } from "react-native-swipe-list-view";
+import { AlunoContext } from "../context/index";
 
 
 const Alunos = () => {
-  const [alunos, setAlunos] = useState([]);
+  const {aluno, setAluno} = useContext(AlunoContext); 
   const { isOpen, onOpen, onClose } = useDisclose();
   const [alunoSelecionado, setAlunoSelecionado] = useState();
   const [isOpenDeleted, setIsOpenDeleted] = useState(false);
@@ -25,7 +26,7 @@ const Alunos = () => {
 
   const consultarAlunos = () => {
     axios.get(URL).then((response) => {
-      setAlunos(response.data);
+      setAluno(response.data);
     });
   };
 
@@ -40,7 +41,7 @@ const Alunos = () => {
   const renderItem = ({ item }) => {
     const clicarAluno = () => {
       setAlunoSelecionado(item);
-      setAlunos([...alunos]);
+      setAluno([...aluno]);
       onOpen();
     };
     return (
@@ -80,7 +81,7 @@ const Alunos = () => {
   };
   return (
     <>
-      <SwipeListView data={alunos} renderItem={renderItem} />
+      <SwipeListView data={aluno} renderItem={renderItem} />
       <AlertDialog
         leastDestructiveRef={cancelRef}
         isOpen={isOpenDeleted}

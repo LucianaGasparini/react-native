@@ -13,7 +13,7 @@ import {
   Text,
   VStack,
 } from "native-base";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Login from "../pages/Login";
 import { UsuarioContext } from "../context";
 import Alunos from "../pages/Alunos";
@@ -22,6 +22,8 @@ import NovoUsuario from "../pages/NovoUsuario";
 import Usuarios from "../pages/Usuarios";
 import NovoAluno from "../pages/NovoAluno";
 import NovaMateria from "../pages/NovaMateria";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const Drawer = createDrawerNavigator();
 
@@ -41,12 +43,45 @@ const getIcon = (screenName) => {
       return "meh";
     case "Nova Matéria":
       return "mobile1";
+      case "Sair":
+      return "logout";
     default:
       return undefined;
   }
 };
 
 function CustomDrawerContent(props) {  
+  const { setUsuario } = useContext(UsuarioContext);
+  const renderLogout = () => {
+    return (
+      <Pressable
+        px="5"
+        py="3"
+        rounded="md"
+        bg={"transparent"}
+        onPress={() => {
+          setUsuario(undefined);
+          AsyncStorage.removeItem("@usuario").then(() => {
+            props.navigation.navigate("Login");
+          });
+        }}
+      >
+<HStack space="7" alignItems="center">
+          <Icon
+          
+            size="5"
+            as={<AntDesign name={getIcon("Sair")} />}
+          />
+          <Text
+            fontWeight="500"
+            
+          >
+            Sair
+          </Text>
+        </HStack>
+      </Pressable>
+    );
+  };
   return (
     <DrawerContentScrollView {...props} safeArea>
       <VStack space="6" my="2" mx="1">
@@ -57,6 +92,7 @@ function CustomDrawerContent(props) {
           <Text fontSize="14" mt="1" color="gray.500" fontWeight="500">
             {props.usuario?.email}
           </Text>
+          
         </Box>
         <VStack divider={<Divider />} space="4">
           <VStack space="3">
@@ -74,6 +110,9 @@ function CustomDrawerContent(props) {
                   props.navigation.navigate(name);
                 }}
                 key={index}
+               /* Style ={name ==="Novo Aluno" ?{
+                  display: 'none'
+                }: null}*/
               >
                 <HStack space="7" alignItems="center">
                   <Icon
@@ -94,6 +133,7 @@ function CustomDrawerContent(props) {
                 </HStack>
               </Pressable>
             ))}
+            {renderLogout()}
           </VStack>
         </VStack>
       </VStack>
@@ -119,10 +159,12 @@ function MyDrawer({ usuario }) {
         <Drawer.Screen name="Usuários" component={Usuarios} />
         <Drawer.Screen name="Novo Usuário" component={NovoUsuario} />
         
+        
       </Drawer.Navigator>
     </Box>
   );
 }
+
 export default function Menu() {
   const { usuario } = useContext(UsuarioContext);
   return (

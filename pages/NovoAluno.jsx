@@ -17,7 +17,7 @@ import {
   Text
 } from "native-base"
 
-export const CadastroAluno = () => {
+export const NovoAluno = () => {
     const [nome, setNome] = useState();
     const [idade, setIdade] = useState();
     const [cidade, setCidade] = useState();
@@ -47,6 +47,8 @@ console.log(error)
        }
      
   return (
+    <NativeBaseProvider>
+    <Center flex={1} px="3">
     <Box safeArea p="2" w="90%" maxW="290" py="8">
       <Heading
         size="lg"
@@ -99,15 +101,10 @@ console.log(error)
         </Button>           
       </VStack>
     </Box>
-  )
-}
-
-export default () => {
-  return (
-    <NativeBaseProvider>
-      <Center flex={1} px="3">
-        <CadastroAluno />
-      </Center>
+    </Center>
     </NativeBaseProvider>
   )
 }
+
+export default NovoAluno;   
+     
